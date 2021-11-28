@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
+    <title>Document</title>
+    <style>
+
+        *{
+            
+            font-family: 'Roboto', sans-serif;
+            margin: 0px;
+            padding: 0px;
+            box-sizing: border-box;
+        }
+
+        body{
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header{
+            width: 100%;
+            padding: 10px;
+        }
+
+        .player{
+            width: 100%;
+            padding: 10px;
+        }
+
+        .container{
+            position: relative;
+            width: 100%;
+            height: 100%;
+            
+        }
+
+        .page{
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            padding: 10px 10px 0px 10px;
+            overflow: auto;
+        }
+
+        .partes{
+            width: 100%;
+            background: #f2f2f2;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            color: #000;
+            display: flex;
+            align-items: center;
+            padding: 20px 20px;
+        }
+
+        .partesActive{
+            background: #aaffac;
+            color: #222;
+        }
+
+        .cx-b{
+            width: 100%;
+            height: 40px;
+
+            display: flex;
+            
+        }
+
+        .b{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .active{
+            background: #73ff5e;
+        }
+
+        .active2{
+            background: #73ff5e;
+        }
+
+        button{
+            padding: 7px 20px;
+            margin-bottom: 5px;
+        }
+
+        .audio{
+            display: none;
+        }
+
+        .fadeOut{
+            display: none;
+        }
+
+        .fadeIn{
+            display: block;
+        }
+
+        .d{
+            width: 100%;
+            padding: 10px;
+            display: flex;
+        }
+
+        .dp1{
+            width: 100%;
+        }
+
+        .d button{
+            margin-left: 5px;
+        }
+
+        .activeMute{
+            background: red;
+            color: #fff;
+            border: none;
+        }
+
+        .activeUnique{
+            background: yellow;
+            color: #000;
+            border: none;
+        }
+
+        .count{
+            width:100%;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content:center;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h2 id='title-id'></h2>
+        <div class="count"></div>
+        <div class="player">
+            <button id="play">Play</button>
+        </div>
+        <div class="cx-b">
+            <div class="b active">Partes</div>
+            <div class="b">Instrumentos</div>
+        </div>
+    </div>
+    
+
+    <div class="container">
+        <div class="page"></div>
+        <div class="page"></div>
+    </div>
+    
+</body>
+
+<script src="banco.js"></script>
+<script>
+
+
+let audio = null;
+let time = 0;
+let count = 0;
+
+const id = document.location.search.substr(1);
+
+function s(c){
+    return document.querySelector(c);
+}
+
+function sall(c){
+    return document.querySelectorAll(c);
+}
+
+function c(s){
+    return document.createElement(s);
+}
+
+
+
+const btns = sall(".b");
+const pages = sall(".page");
+
+pages[1].classList.add("fadeOut");
+
+btns.forEach(function(r, i){
+    
+    r.addEventListener("click", function(){
+
+        pages.forEach(function(r, i){
+            r.classList.add("fadeOut");
+            r.classList.remove("fadeIn");
+            btns[i].classList.remove("active");
+        });
+
+        pages[i].classList.remove("fadeOut");
+        pages[i].classList.add("fadeIn");
+        this.classList.add("active");
+    
+    });
+
+
+})
+
+
+
+
+const result = data.filter(function(r){
+    return r.id == id;
+});
+
+const title = s("#title-id");
+title.innerHTML = result[0].name;
+
+if (result[0].partes) {
+    result[0].partes.map(function(r, i){
+       
+        const partes = c("div");
+        
+        partes.setAttribute("class", "partes");
+        partes.innerHTML = r.title;
+
+        // Evento click nas partes da música
+        let ck = false;
+        partes.addEventListener("click", function(){
+
+            const p = sall(".partes");
+            p.forEach(function(r, i){
+
+                const cl = r.classList;
+               
+                if (r.classList.value.indexOf("partesActive")) {
+                    r.classList.remove("partesActive");
+                }
+    
+            });
+            if (!ck) {
+                this.classList.add("partesActive");
+                ck = true;
+            }else{
+                this.classList.remove("partesActive");
+                ck = false;
+            }
+            
+            
+        
+        });
+
+        sall(".page")[0].appendChild(partes);
+
+    });
+}
+
+console.log(result[0].instruments);
+
+
+// Segunda aba
+result[0].instruments.forEach(function(r, i){
+
+    const d = c("div");
+    d.setAttribute("class", "d");
+        const dp1 = c("div");
+        dp1.setAttribute("class", "dp1");
+        dp1.innerHTML = r;
+
+        const dp2 = c("button");
+        dp2.innerHTML = `Mute`;
+        dp2.addEventListener("click", function(){
+
+            if (objectAudio[i].volume == 0) {
+                objectAudio[i].volume = 1;
+                this.classList.remove("activeMute");
+            }else{
+                objectAudio[i].volume = 0;
+                this.classList.add("activeMute");
+            }
+            
+            
+        });
+
+
+        let bac = true;
+        const dp3 = c("button");
+        dp3.innerHTML = `Unique`;
+        dp3.addEventListener("click", function(){
+
+            if (bac) {
+
+                if (s(".activeUnique")) {
+                    s(".activeUnique").classList.remove("activeUnique");
+                }
+
+                objectAudio.forEach(function(r, i){
+
+                    r.volume = 0;
+                   
+
+                });
+
+                objectAudio[i].volume = 1;
+
+                this.classList.add("activeUnique");
+                bac = false;
+
+            }else{
+
+                if (s(".activeUnique")) {
+                    s(".activeUnique").classList.remove("activeUnique");
+                }
+
+                objectAudio.forEach(function(r, i){
+
+                    r.volume = 1;
+
+                    
+                });
+                this.classList.remove("activeUnique");
+                bac = true;
+            }
+
+            
+
+            
+
+        });
+
+        d.appendChild(dp1);
+        d.appendChild(dp2);
+        d.appendChild(dp3);
+
+    sall(".page")[1].appendChild(d);
+
+});
+
+
+
+
+const objectAudio = [];
+
+function audioPlay(m){
+
+    const a = c("audio");
+    a.setAttribute("controls", "controls");
+    a.setAttribute("class", "audio");
+    
+    const source = c("source");
+    source.setAttribute("src", m);
+
+    a.appendChild(source);
+
+    objectAudio.push(a);
+
+    return a;
+    
+
+
+}
+
+// const cTime = [
+//     2,
+//     5,
+//     18,
+//     31,
+//     45
+// ];
+
+
+function update(cTime){
+
+    const a1 = objectAudio[0];
+    let ii = 0;
+
+
+    const setTime = setTimeout(function(){
+
+        const t = objectAudio[0].currentTime;
+
+         objectAudio.forEach(function(r, i){
+
+            r.currentTime = t;
+            
+        });
+        
+    }, 500);
+
+    // count++;
+
+    const setIn = setInterval(function(){
+
+        if (cTime) {
+            cTime.forEach(function(r){
+                if (Math.floor(a1.currentTime) == r) {
+                    if (s(".active2")) {
+                        s(".active2").classList.remove("active2");
+                    }
+                    if (sall(".partes")[ii]) {
+                        sall(".partes")[ii].classList.add("active2");
+                    }
+                    
+                    ii++;
+                    
+                }
+            });
+        }
+
+        // s('.count').innerHTML = count;
+
+        count++;
+
+    }, 1000);
+
+    
+    
+    console.log("------");
+
+}
+
+
+
+
+
+const dir = result[0].dir;
+result[0].instruments.forEach(function(r){
+    const file = `assets/music/${dir}/${r}.mp3`;
+    audioPlay(file);
+});
+
+
+
+function play(){
+
+    objectAudio.forEach(function(r){
+        r.play();
+    });
+
+    // console.log(result[0].cTime);
+    update(result[0].cTime);
+
+}
+
+const btnPlay = s("#play");
+btnPlay.addEventListener("click", function(){
+    play();
+})
+
+
+
+
+
+
+
+</script>
+</html>

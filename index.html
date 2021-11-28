@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
+    <title>Document</title>
+    <style>
+        *{
+            font-family: 'Roboto', sans-serif;
+        }
+        .dv{
+            padding:5px 10px;
+
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="content">
+
+
+
+
+
+    </div>
+
+
+
+</body>
+
+<script src="banco.js"></script>
+<script>
+
+
+
+function s(c){
+    return document.querySelector(c);
+}
+
+function sall(c){
+    return document.querySelectorAll(c);
+}
+
+function listMusic(){
+
+    const d = s(".content");
+
+    data.map(function(r, i){
+        console.log(r.name);
+        const dv = document.createElement("div");
+        dv.setAttribute("class", "dv");
+        dv.innerHTML = r.name;
+
+        dv.addEventListener('click', function(){
+            document.location.href = `page2.html?${r.id}`;
+        });
+
+        d.appendChild(dv);
+    });
+    
+
+}
+
+listMusic();
+
+
+
+
+
+</script>
+
+
+</html>
