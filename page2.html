@@ -439,8 +439,8 @@ result[0].instruments.forEach(function(r){
 
 function play(){
 
-    objectAudio.forEach(function(r){
-        r.play();
+    objectAudio.forEach(async function(r){
+        await r.play();
     });
 
     // console.log(result[0].cTime);
